@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         论坛列表显示图片
 // @namespace    form_show_images_in_list
-// @version      1.5.1
+// @version      1.5.2
 // @description  论坛列表显示图片，同时支持discuz搭建的论坛（如吾爱破解）以及phpwind搭建的论坛（如south plus）等
 // @license MIT
 // @author       Gloduck
