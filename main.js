@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         论坛列表显示图片
 // @namespace    form_show_images_in_list
-// @version      1.5
+// @version      1.5.1
 // @description  论坛列表显示图片，同时支持discuz搭建的论坛（如吾爱破解）以及phpwind搭建的论坛（如south plus）等
 // @license MIT
 // @author       Gloduck
@@ -112,11 +112,11 @@
             parsePostImage: (link, response) => {
                 const images = [];
                 const pageContent = new DOMParser().parseFromString(response, 'text/html');
-                const postContent = pageContent.querySelector('div[id^="post_"] .plc');
+                const postContent = pageContent.querySelector('div[id^="post_"] .plc .pct .pcb');
                 if (!postContent) {
                     return images;
                 }
-                const imgElements = postContent.querySelectorAll('img');
+                const imgElements = postContent.querySelectorAll('img[id^="aimg_"]');
                 imgElements.forEach(img => {
                     let imageLink = null;
                     imageLink = img.getAttribute('file');
