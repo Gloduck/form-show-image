@@ -62,6 +62,9 @@
     // 当前设置变量
     let currentSettings = {};
 
+    // 使用固定的UA，防止请求解析不正确
+    const defaultUa = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
+
     const settingsItems = [
         {
             label: '启用脚本',
@@ -353,6 +356,9 @@
                 GM_xmlhttpRequest({
                     method: 'GET',
                     url: url,
+                    headers: {
+                        'User-Agent': defaultUa
+                    },
                     onload: function (response) {
                         resolve(response.responseText);
                     },
