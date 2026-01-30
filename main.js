@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         论坛列表显示图片
 // @namespace    form_show_images_in_list
-// @version      1.5.2
+// @version      1.5.3
 // @description  论坛列表显示图片，同时支持discuz搭建的论坛（如吾爱破解）以及phpwind搭建的论坛（如south plus）等
 // @license MIT
 // @author       Gloduck
@@ -56,14 +56,12 @@
         lazyLoad: true,
         maxImageDisplayCount: 3,
         requestMaxDelay: 3000,
+        defaultUa: null,
         ignoredImagePattern: []
     };
 
     // 当前设置变量
     let currentSettings = {};
-
-    // 使用固定的UA，防止请求解析不正确
-    const defaultUa = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
 
     const settingsItems = [
         {
@@ -87,6 +85,11 @@
             name: 'requestMaxDelay',
             type: 'number',
             extraAttrs: 'min="0" max="10000"'
+        },
+        {
+            label: '默认UA',
+            name: 'defaultUa',
+            type: 'input'
         },
         {
             label: '忽略图片',
@@ -292,7 +295,11 @@
             throw new Error("无法解析文章连接");
         }
         link = convertPathToAccessible(link, window.location.href);
-        const articleContent = await httpGetRequest(link, settings.requestMaxDelay);
+        const headers = {};
+        if (settings.defaultUa && settings.defaultUa.trim() !== "") {
+            headers['User-Agent'] = settings.defaultUa;
+        }
+        const articleContent = await httpGetRequest(link, settings.requestMaxDelay, headers);
         if (!articleContent) {
             throw new Error("无法获取文章内容");
         }
@@ -349,7 +356,7 @@
 
 
 
-    function httpGetRequest(url, maxDelay) {
+    function httpGetRequest(url, maxDelay, headers) {
         return new Promise((resolve, reject) => {
             const delay = Math.random() * maxDelay;
             setTimeout(() => {
@@ -357,7 +364,7 @@
                     method: 'GET',
                     url: url,
                     headers: {
-                        'User-Agent': defaultUa
+                        ...headers,
                     },
                     onload: function (response) {
                         resolve(response.responseText);
